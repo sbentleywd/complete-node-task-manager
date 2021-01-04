@@ -59,6 +59,15 @@ userSchema.methods.generateAuthToken = async function () {
 	return token;
 };
 
+// overides default toJSON method to remove password & tokens
+userSchema.methods.toJSON = function () {
+	const user = this;
+	const userObj = user.toObject();
+	delete userObj.password;
+	delete userObj.tokens;
+	return userObj;
+};
+
 // static methods are accessible on the model(in this case User), methods are accessible on the instance of a model (in this case user)
 userSchema.statics.findByCredentials = async (email, password) => {
 	const user = await User.findOne({ email });
