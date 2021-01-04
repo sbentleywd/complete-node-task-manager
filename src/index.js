@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 require("./db/mongoose");
 
 const userRouter = require("./routers/user");
@@ -8,19 +9,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // custom middleware
+
 // app.use((req, res, next) => {
-// 	if (req.method === "GET") {
-// 		res.send("Get requests are disabled");
-// 	} else {
-// 		next();
-// 	}
+// 	res.status(503).send("Site under maintenance");
 // });
 
-app.use((req, res, next) => {
-	res.status(503).send("Site under maintenance");
-});
-
 app.use(express.json());
+app.use(morgan("tiny"));
 app.use(userRouter);
 app.use(taskRouter);
 
