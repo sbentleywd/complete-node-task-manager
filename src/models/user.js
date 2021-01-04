@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
 	name: {
@@ -40,8 +41,25 @@ const userSchema = new mongoose.Schema({
 			}
 		},
 	},
+	tokens: [
+		{
+			token: {
+				type: String,
+				required: true,
+			},
+		},
+	],
 });
 
+userSchema.methods.generateAuthToken = async function () {
+	const user = this;
+	const token = jwt.sign({ _id: user.id.toString() }, "thisisasecret");
+	user.tokens = user.tokens.concat({ token });
+	await user.save();
+	return token;
+};
+
+// static methods are accessible on the model(in this case User), methods are accessible on the instance of a model (in this case user)
 userSchema.statics.findByCredentials = async (email, password) => {
 	const user = await User.findOne({ email });
 
