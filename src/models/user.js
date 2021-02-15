@@ -80,6 +80,22 @@ userSchema.methods.generateAuthToken = async function () {
 	return token;
 };
 
+// delete expired tokens
+userSchema.methods.cleanTokens = async function () {
+	const user = this;
+	user.tokens = user.tokens.filter((token) => {
+		try {
+			const decoded = jwt.verify(token.token, process.env.JWT_SECRET);
+			return decoded;
+		} catch (e) {
+			return false;
+		}
+	});
+
+	await user.save();
+	return;
+};
+
 // overides default toJSON method to remove password & tokens
 userSchema.methods.toJSON = function () {
 	const user = this;
