@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
-    "test": "env-cmd -f ./config/test.env jest --watch --detectOpenHandles --runInBand"
+    "test": "env-cmd -f ./config/test.env jest --watch --detectOpenHandles --runInBand",
+    "dev-db": "~/mongodb/bin/mongod --dbpath ~/mongodb-data"
   },
   "jest": {
     "testEnvironment": "node"

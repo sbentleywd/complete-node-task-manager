@@ -8,6 +8,9 @@ router.get("/tasks", auth, async (req, res) => {
 	if (req.query.completed) {
 		match.completed = req.query.completed === "true";
 	}
+	if (req.query.category !== 'All') {
+		match.category = req.query.category;
+	}
 	const sort = {};
 	if (req.query.sortBy) {
 		const parts = req.query.sortBy.split(":");
