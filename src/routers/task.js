@@ -8,6 +8,9 @@ router.get("/tasks", auth, async (req, res) => {
 	if (req.query.completed) {
 		match.completed = req.query.completed === "true";
 	}
+	if (req.query.category !== "All") {
+		match.category = req.query.category;
+	}
 	const sort = {};
 	if (req.query.sortBy) {
 		const parts = req.query.sortBy.split(":");
@@ -27,6 +30,20 @@ router.get("/tasks", auth, async (req, res) => {
 			})
 			.execPopulate();
 		res.send(req.user.tasks);
+	} catch (e) {
+		res.status(500).send();
+	}
+});
+
+router.get("/categories", auth, async (req, res) => {
+	try {
+		let options = {};
+		if (req.query.completed === "false") options.completed = false;
+		const categories = await Task.distinct("category", options);
+		if (!categories.length) {
+			return res.status(404).send();
+		}
+		res.send(categories);
 	} catch (e) {
 		res.status(500).send();
 	}

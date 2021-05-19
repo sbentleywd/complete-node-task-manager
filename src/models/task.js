@@ -20,6 +20,10 @@ const taskSchema = new mongoose.Schema(
 			type: Date,
 			required: false,
 		},
+		category: {
+			type: String,
+			default: "General",
+		},
 	},
 	{
 		timestamps: true,
